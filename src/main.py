@@ -6,9 +6,7 @@ import keyboard as kb
 from callbacks.simple_feedback import simple_feedback
 from callbacks.rotating_feedback import rotating_feedback
 
-# Audio Stream Configuration
-SAMPLE_RATE = 48000
-BLOCK_SIZE = 512  # Low latency buffer size (number of frames per callback)
+from globals import *
 
 MODE_ARR = ['None', 'rotating']
 FEEDBACK_ARR = [simple_feedback, rotating_feedback]
