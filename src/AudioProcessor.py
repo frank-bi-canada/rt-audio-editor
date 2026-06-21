@@ -36,7 +36,7 @@ class AudioProcessor:
         if status:
             print(status)
 
-        outdata[:] = np.zeros(indata.shape)  # Empty outdata
+        outdata[:] = np.zeros(outdata.shape)  # Empty outdata
         self.feedback.callback(indata, outdata, frames, time)
 
     def run(self):
