@@ -1,3 +1,7 @@
-# Audio Stream Configuration
-SAMPLE_RATE = 48000
-BLOCK_SIZE = 512  # Low latency buffer size (number of frames per callback)
+from typing import Final, Sequence
+
+from callbacks.Feedback import Feedback
+from callbacks.SimpleFeedback import SimpleFeedback
+from callbacks.RotatingFeedback import RotatingFeedBack
+
+FEEDBACK_ARR:Final[Sequence[type[Feedback]]] = [SimpleFeedback, RotatingFeedBack] # Array of classes
