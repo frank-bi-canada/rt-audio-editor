@@ -15,6 +15,7 @@ class AudioProcessor:
         self.running = True
         self.mode = 0  # Switch between audio editors
         self.feedback = FEEDBACK_ARR[0](self)
+        self.noise_clean = False
         
         self.keyboard_init()
 
@@ -22,11 +23,19 @@ class AudioProcessor:
         kb.add_hotkey('ctrl+alt+x', lambda: self.cleanup())
         kb.add_hotkey('ctrl+alt+0', lambda: self.set_mode(0))
         kb.add_hotkey('ctrl+alt+1', lambda: self.set_mode(1))
+        kb.add_hotkey('ctrl+alt+\\', lambda: self.toggle_noise())
 
     def set_mode(self, mode):
         self.mode = mode
+        # TODO: Add error checking (len FEEDBACK_ARR < 10)
         self.feedback = FEEDBACK_ARR[mode](self)
         print("Selected mode: " + str(self.feedback))
+    
+    def toggle_noise(self):
+        if self.noise_clean:
+            self.noise_clean = False
+        else:
+            self.noise_clean = True
 
     def master_callback(self, indata, outdata, frames, time, status):
         """
@@ -35,6 +44,10 @@ class AudioProcessor:
         """
         if status:
             print(status)
+        
+        if self.noise_clean:
+            # indata[:] = indata[:] * 2
+            pass
 
         outdata[:] = np.zeros(outdata.shape)  # Empty outdata
         self.feedback.callback(indata, outdata, frames, time)
