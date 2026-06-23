@@ -1,5 +1,6 @@
 import numpy as np
 import sounddevice as sd
+import noisereduce as nr
 import keyboard as kb
 
 from globals import FEEDBACK_ARR
@@ -8,6 +9,11 @@ from globals import FEEDBACK_ARR
 class AudioProcessor:
 
     def __init__(self, sample_rate=48000, block_size=512) -> None:
+        """
+        sample_rate: Number of samples to take per second.
+        block_size: Number of samples in each block. Increasing block_size will lead to a longer delay.
+        """
+        
         # Audio Stream Configuration
         self.SAMPLE_RATE = sample_rate # Low latency buffer size (number of frames per callback)
         self.BLOCK_SIZE = block_size
@@ -17,6 +23,8 @@ class AudioProcessor:
         self.feedback = FEEDBACK_ARR[0](self)
         self.noise_clean = False
         
+        self.debug_msg = ''
+        
         self.keyboard_init()
 
     def keyboard_init(self):
@@ -24,6 +32,7 @@ class AudioProcessor:
         kb.add_hotkey('ctrl+alt+0', lambda: self.set_mode(0))
         kb.add_hotkey('ctrl+alt+1', lambda: self.set_mode(1))
         kb.add_hotkey('ctrl+alt+\\', lambda: self.toggle_noise())
+        kb.add_hotkey('ctrl+alt+`', lambda: self.print_debug())
 
     def set_mode(self, mode):
         self.mode = mode
@@ -34,8 +43,10 @@ class AudioProcessor:
     def toggle_noise(self):
         if self.noise_clean:
             self.noise_clean = False
+            print("Noise cleaning disabled.")
         else:
             self.noise_clean = True
+            print("Noise cleaning enabled.")
 
     def master_callback(self, indata, outdata, frames, time, status):
         """
@@ -46,11 +57,18 @@ class AudioProcessor:
             print(status)
         
         if self.noise_clean:
-            # indata[:] = indata[:] * 2
-            pass
+            self.clean_noise(indata)
 
         outdata[:] = np.zeros(outdata.shape)  # Empty outdata
         self.feedback.callback(indata, outdata, frames, time)
+        
+        self.debug_msg = indata.shape
+    
+    def clean_noise(self, indata):
+        # indata[:] = indata[:] * 5
+        data = indata.squeeze()
+        cleaned_data = nr.reduce_noise(y=data, sr=self.SAMPLE_RATE, use_tqdm=False)
+        indata[:] = cleaned_data[:, np.newaxis]
 
     def run(self):
         try:
@@ -76,3 +94,7 @@ class AudioProcessor:
     def cleanup(self):
         print("\nStream terminated from shortcut.")
         self.running = False
+    
+    def print_debug(self):
+        print(str(self.debug_msg))
+        self.debug_msg = 'EMPTY'
