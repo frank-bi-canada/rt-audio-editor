@@ -1,10 +1,9 @@
 import numpy as np
 import sounddevice as sd
-import noisereduce as nr
 import keyboard as kb
 
 from globals import FEEDBACK_ARR
-
+from NoiseHandler.NoiseHandler import NoiseHandler
 
 class AudioProcessor:
 
@@ -21,9 +20,11 @@ class AudioProcessor:
         self.running = True
         self.mode = 0  # Switch between audio editors
         self.feedback = FEEDBACK_ARR[0](self)
-        self.noise_clean = False
         
-        self.debug_msg = ''
+        self.noise_clean = False
+        self.noise_handler = NoiseHandler(self)
+        
+        self.debug_msg = '' # TODO: Remove
         
         self.keyboard_init()
 
@@ -57,18 +58,12 @@ class AudioProcessor:
             print(status)
         
         if self.noise_clean:
-            self.clean_noise(indata)
+            self.noise_handler.clean(indata)
 
         outdata[:] = np.zeros(outdata.shape)  # Empty outdata
         self.feedback.callback(indata, outdata, frames, time)
         
-        self.debug_msg = indata.shape
-    
-    def clean_noise(self, indata):
-        # indata[:] = indata[:] * 5
-        data = indata.squeeze()
-        cleaned_data = nr.reduce_noise(y=data, sr=self.SAMPLE_RATE, use_tqdm=False)
-        indata[:] = cleaned_data[:, np.newaxis]
+        self.debug_msg = indata[0] # TODO: Remove
 
     def run(self):
         try:
