@@ -11,5 +11,4 @@ To introduce a new feedback filter:
 3. In `AudioProcessor.py`, add a keyboard shortcut for activation.
 
 ### Potential Features:
-- Slight delay or to allow overlap of voice
 - Soundboard
