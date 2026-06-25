@@ -22,7 +22,7 @@ class RotatingFeedBack(Feedback):
         indata:  NumPy array of shape (frames, 1) containing mono microphone input
         outdata: NumPy array of shape (frames, 2) containing stereo output
         """
-        # 1 degree per frame, SAMPLE_RATE frames per second
+        # SAMPLE_RATE frames per second
         delta_theta = np.pi / 180.0 / self.audio_processor.SAMPLE_RATE * self.deg_per_sec
 
         data = indata
