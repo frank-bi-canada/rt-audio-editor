@@ -12,3 +12,8 @@ To introduce a new feedback filter:
 
 ### Potential Features:
 - Soundboard
+- configs.py
+    - Imported into main, fed into AudioProcessor
+    - dict = {'hotkey': MyFeedback()}
+- Positive, negative, and neutral inputs for Feedbacks
+- Input/output visualization
