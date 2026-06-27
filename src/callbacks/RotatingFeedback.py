@@ -7,7 +7,6 @@ class RotatingFeedBack(Feedback):
 
     def __init__(self, audio_processor) -> None:
         super().__init__(audio_processor)
-        self.mode = "Rotating"
 
         # Volume multiplier (At MULT=1: theta=PI/2 => 100% volume; theta=0 => Right ear 200% volume)
         self.MULT_FACTOR = 0.5
@@ -17,12 +16,13 @@ class RotatingFeedBack(Feedback):
 
     def callback(self, indata, outdata, frames, time):
         """
-        Simulate the audio source moving in a counterclockwise circle around the listener
+        Simulate the audio source moving in a counterclockwise circle around the listener.
 
-        indata:  NumPy array of shape (frames, 1) containing mono microphone input
-        outdata: NumPy array of shape (frames, 2) containing stereo output
+        indata:  NumPy array of shape (frames, 1) containing mono microphone input.
+        outdata: NumPy array of shape (frames, 2) containing stereo output.
+        frames:  The number of audio frames in the input and output arrays.
         """
-        # 1 degree per frame, SAMPLE_RATE frames per second
+        # SAMPLE_RATE frames per second
         delta_theta = np.pi / 180.0 / self.audio_processor.SAMPLE_RATE * self.deg_per_sec
 
         data = indata
