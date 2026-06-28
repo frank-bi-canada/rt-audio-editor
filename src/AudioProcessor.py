@@ -2,13 +2,13 @@ import numpy as np
 import sounddevice as sd
 import keyboard as kb
 
-from globals import FEEDBACK_ARR
-from NoiseHandler.NoiseHandler import NoiseHandler
+from .callbacks.Feedback import Feedback
+from .NoiseHandler.NoiseHandler import NoiseHandler
 
 
 class AudioProcessor:
 
-    def __init__(self, sample_rate=48000, block_size=512) -> None:
+    def __init__(self, hotkey_to_feedback: dict[str, Feedback], sample_rate=48000, block_size=512) -> None:
         """
         sample_rate: Number of samples to take per second.
         block_size: Number of samples in each block. Increasing block_size will lead to a longer delay.
@@ -19,31 +19,40 @@ class AudioProcessor:
         self.SAMPLE_RATE = sample_rate
         self.BLOCK_SIZE = block_size
 
-        self.running = True
-        self.mode = 0  # Switch between audio editors
-        self.feedback = FEEDBACK_ARR[0](self)
+        if len(hotkey_to_feedback) < 1:
+            raise ValueError("hotkey_to_feedback dict cannot be empty.")
+        self.feedback_init(hotkey_to_feedback.values())
+        self.keyboard_init(hotkey_to_feedback.keys())
 
         self.noise_clean = False
         self.noise_handler = NoiseHandler(self)
 
+        self.running = True
+
         self.debug_msg = ''  # TODO: Remove
         self.debug_var0 = 0
 
-        self.keyboard_init()
+    def feedback_init(self, feedbacks):
+        self.feedback_arr: list[Feedback] = []
+        for feedback in feedbacks:  # Initialize an instance for each class once
+            self.feedback_arr.append(feedback(self))
 
-    def keyboard_init(self):
-        kb.add_hotkey('ctrl+alt+x', lambda: self.cleanup())
-        kb.add_hotkey('ctrl+alt+0', lambda: self.set_mode(0))
-        kb.add_hotkey('ctrl+alt+1', lambda: self.set_mode(1))
-        kb.add_hotkey('ctrl+alt+2', lambda: self.set_mode(2))
+        # Set default feedback to the first
+        self.active_feedback: Feedback = self.feedback_arr[0]
+
+    def keyboard_init(self, feedback_hotkeys: list[str]):
+        # Default keybinds
+        kb.add_hotkey('ctrl+alt+x', lambda: self.stop())
         kb.add_hotkey('ctrl+alt+\\', lambda: self.toggle_noise())
         kb.add_hotkey('ctrl+alt+`', lambda: self.print_debug())
 
-    def set_mode(self, mode):
-        self.mode = mode
-        # TODO: Add error checking (len FEEDBACK_ARR < 10)
-        self.feedback = FEEDBACK_ARR[mode](self)
-        print("Selected mode: " + str(self.feedback))
+        # Feedback keybinds
+        for i, hotkey in enumerate(feedback_hotkeys):
+            kb.add_hotkey(hotkey, lambda curr_i=i: self.set_feedback(curr_i))
+
+    def set_feedback(self, index: int):
+        self.active_feedback = self.feedback_arr[index]
+        print("Selected mode: " + str(self.active_feedback))
 
     def toggle_noise(self):
         if self.noise_clean:
@@ -64,15 +73,17 @@ class AudioProcessor:
         if self.noise_clean:
             self.noise_handler.clean(indata)
 
-        outdata[:] = np.zeros(outdata.shape)  # Empty outdata
-        self.feedback.callback(indata, outdata, frames, time)
+        outdata.fill(0)  # Empty outdata
+        self.active_feedback.callback(indata, outdata, frames, time)
 
+        # ===== DEBUG BLOCK =====
         self.debug_msg = f"MAX: {np.max(outdata):<15.10f} | " + \
             f"MIN: {np.min(outdata):<15.10f} | " + \
             f"MAX DIFF: {np.max(np.abs(np.diff(outdata, axis=0))):<15.10f} | " + \
             f"PREV DIFF: {np.abs(outdata[0, 0] - self.debug_var0):<15.10f} | " + \
             f"ARR: [ {outdata[0]} ... {outdata[-1]} ]"  # TODO: Remove
         self.debug_var0 = outdata[0, 0]
+        # =======================
 
     def run(self):
         try:
@@ -95,7 +106,7 @@ class AudioProcessor:
         except Exception as e:
             print(f"An error occurred: {e}")
 
-    def cleanup(self):
+    def stop(self):
         print("\nStream terminated from shortcut.")
         self.running = False
 

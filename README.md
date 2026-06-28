@@ -7,13 +7,10 @@ This project was compiled with `Python 3.14.2`.
 
 To introduce a new feedback filter:
 1. In a new `CustomFeedback.py` (or directly in one of the Feedback files), create a child class `CustomFeedback` of the `Feedback` class from `src/classbacks/Feedback.py`.
-2. In `globals.py`, import the `CustomFeedback` class and add it to the array.
-3. In `AudioProcessor.py`, add a keyboard shortcut for activation.
+2. In `src/callbacks/__init__.py`, import the `CustomFeedback` class and add it to the `__all__` array.
+3. In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback` dict for mapping and activation.
 
 ### Potential Features:
 - Soundboard
-- configs.py
-    - Imported into main, fed into AudioProcessor
-    - dict = {'hotkey': MyFeedback()}
 - Positive, negative, and neutral inputs for Feedbacks
 - Input/output visualization

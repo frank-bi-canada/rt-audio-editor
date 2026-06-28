@@ -1,8 +1,19 @@
-from AudioProcessor import AudioProcessor
+from .AudioProcessor import AudioProcessor
+from .callbacks import *
+
 
 def main():
-    audio_processor = AudioProcessor(sample_rate=12000, block_size=512)
+
+    hotkey_to_feedback: dict[str, Feedback] = {
+        'ctrl+alt+0': SimpleFeedback,
+        'ctrl+alt+1': RotatingFeedBack,
+        'ctrl+alt+2': MultivoiceFeedback,
+    }
+
+    audio_processor = AudioProcessor(
+        hotkey_to_feedback, sample_rate=12000, block_size=512)
     audio_processor.run()
+
 
 if __name__ == '__main__':
     main()
