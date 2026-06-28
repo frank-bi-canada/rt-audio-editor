@@ -3,6 +3,13 @@ A program that allows editing a microphone input in real time, like Voicemod.
 
 This project was compiled with `Python 3.14.2`.
 
+To run from the `rt-audio-editor` directory:
+```
+python3 -m src.main
+```
+
+To stop, do `ctrl+c` in the running terminal or `ctrl-alt-x` from anywhere.
+
 ## Feedback Callbacks
 
 To introduce a new feedback filter:
