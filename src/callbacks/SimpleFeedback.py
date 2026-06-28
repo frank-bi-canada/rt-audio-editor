@@ -1,4 +1,4 @@
-from callbacks.Feedback import Feedback
+from .Feedback import Feedback
 
 class SimpleFeedback(Feedback):
     
