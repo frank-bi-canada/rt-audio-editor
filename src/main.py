@@ -1,5 +1,5 @@
-from .AudioProcessor import AudioProcessor
-from .callbacks import *
+from src.AudioProcessor import AudioProcessor
+from src.callbacks import *
 
 
 def main():
@@ -10,7 +10,9 @@ def main():
         'ctrl+alt+2': MultivoiceFeedback,
     }
 
-    audio_processor = AudioProcessor(hotkey_to_feedback, sample_rate=12000, block_size=512)
+    audio_processor = AudioProcessor(
+        hotkey_to_feedback, sample_rate=12000, block_size=512
+    )
     audio_processor.run()
 
 

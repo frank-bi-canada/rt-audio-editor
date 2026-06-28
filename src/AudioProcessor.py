@@ -2,8 +2,8 @@ import numpy as np
 import sounddevice as sd
 import keyboard as kb
 
-from .callbacks.Feedback import Feedback
-from .NoiseHandler.NoiseHandler import NoiseHandler
+from src.callbacks.Feedback import Feedback
+from src.NoiseHandler.NoiseHandler import NoiseHandler
 
 
 class AudioProcessor:
@@ -33,6 +33,9 @@ class AudioProcessor:
         self.debug_var0 = 0
 
     def feedback_init(self, feedbacks):
+        """
+        feedbacks: Ordered array of Feedback child classes, not instances.
+        """
         self.feedback_arr: list[Feedback] = []
         for feedback in feedbacks:  # Initialize an instance for each class once
             self.feedback_arr.append(feedback(self))
@@ -41,6 +44,9 @@ class AudioProcessor:
         self.active_feedback: Feedback = self.feedback_arr[0]
 
     def keyboard_init(self, feedback_hotkeys: list[str]):
+        """
+        feedback_hotkeys: Ordered array of strings representing hotkeys.
+        """
         # Default keybinds
         kb.add_hotkey('ctrl+alt+x', lambda: self.stop())
         kb.add_hotkey('ctrl+alt+\\', lambda: self.toggle_noise())
@@ -86,6 +92,8 @@ class AudioProcessor:
         # =======================
 
     def run(self):
+        """Continuously run the audio processor until termination. 1D microphone inputs will be processed and outputed to 2D speaker outputs.
+        """
         try:
             # Open an input/output stream simultaneously
             with sd.Stream(samplerate=self.SAMPLE_RATE,
