@@ -18,6 +18,15 @@ class Feedback:
         frames:  The number of audio frames in the input and output arrays.
         """
         raise NotImplementedError("This is an abstract parent class.")
+    
+    def positive_input(self):
+        return
+    
+    def negative_input(self):
+        return
+    
+    def neutral_input(self):
+        return
 
     def __str__(self) -> str:
         return "base feedback"
