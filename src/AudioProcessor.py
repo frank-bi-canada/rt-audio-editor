@@ -49,12 +49,16 @@ class AudioProcessor:
         """
         # Default keybinds
         kb.add_hotkey('ctrl+alt+x', lambda: self.stop())
-        kb.add_hotkey('ctrl+alt+\\', lambda: self.toggle_noise())
+        kb.add_hotkey('ctrl+alt+n', lambda: self.toggle_noise())
         kb.add_hotkey('ctrl+alt+`', lambda: self.print_debug())
 
         # Feedback keybinds
         for i, hotkey in enumerate(feedback_hotkeys):
             kb.add_hotkey(hotkey, lambda curr_i=i: self.set_feedback(curr_i))
+        kb.add_hotkey('ctrl+alt+[', lambda: self.active_feedback.negative_input())
+        kb.add_hotkey('ctrl+alt+]', lambda: self.active_feedback.positive_input())
+        kb.add_hotkey("ctrl+alt+\\", lambda: self.active_feedback.neutral_input())
+        
 
     def set_feedback(self, index: int):
         self.active_feedback = self.feedback_arr[index]
