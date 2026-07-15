@@ -8,7 +8,7 @@ from src.NoiseHandler.NoiseHandler import NoiseHandler
 
 class AudioProcessor:
 
-    def __init__(self, hotkey_to_feedback: dict[str, Feedback], sample_rate=48000, block_size=512) -> None:
+    def __init__(self, hotkey_to_feedback: dict[str, Feedback], input_device=None, output_device=None, sample_rate=48000, block_size=512) -> None:
         """
         sample_rate: Number of samples to take per second.
         block_size: Number of samples in each block. Increasing block_size will lead to a longer delay.
@@ -16,6 +16,10 @@ class AudioProcessor:
 
         # Audio Stream Configuration
         # Low latency buffer size (number of frames per callback)
+        if input_device is not None and output_device is not None:
+            self.DEVICE = (input_device, output_device)
+        else:
+            self.DEVICE = sd.default.device
         self.SAMPLE_RATE = sample_rate
         self.BLOCK_SIZE = block_size
 
@@ -55,10 +59,12 @@ class AudioProcessor:
         # Feedback keybinds
         for i, hotkey in enumerate(feedback_hotkeys):
             kb.add_hotkey(hotkey, lambda curr_i=i: self.set_feedback(curr_i))
-        kb.add_hotkey('ctrl+alt+[', lambda: self.active_feedback.negative_input())
-        kb.add_hotkey('ctrl+alt+]', lambda: self.active_feedback.positive_input())
-        kb.add_hotkey("ctrl+alt+\\", lambda: self.active_feedback.neutral_input())
-        
+        kb.add_hotkey(
+            'ctrl+alt+[', lambda: self.active_feedback.negative_input())
+        kb.add_hotkey(
+            'ctrl+alt+]', lambda: self.active_feedback.positive_input())
+        kb.add_hotkey(
+            "ctrl+alt+\\", lambda: self.active_feedback.neutral_input())
 
     def set_feedback(self, index: int):
         self.active_feedback = self.feedback_arr[index]
@@ -100,12 +106,13 @@ class AudioProcessor:
         """
         try:
             # Open an input/output stream simultaneously
-            with sd.Stream(samplerate=self.SAMPLE_RATE,
-                           blocksize=self.BLOCK_SIZE,
-                           # 1 Input (Mic), 2 Outputs (Stereo Speakers/Headphones)
-                           channels=(1, 2),
-                           callback=self.master_callback,
-                           dtype='float32'):
+            with sd.Stream(device=self.DEVICE,
+                samplerate=self.SAMPLE_RATE,
+                blocksize=self.BLOCK_SIZE,
+                # 1 Input (Mic), 2 Outputs (Stereo Speakers/Headphones)
+                channels=(1, 2),
+                callback=self.master_callback,
+                    dtype='float32'):
 
                 print("Begin processing real-time audio...")
                 print("Stop with Ctrl-Alt-X or Ctrl-C.")
