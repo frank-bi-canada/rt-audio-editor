@@ -6,7 +6,7 @@ from collections import deque
 
 class MultivoiceFeedback(Feedback):
 
-    def __init__(self, audio_processor, max_voices=9, max_delay=1.0) -> None:
+    def __init__(self, audio_processor, max_voices=3, max_delay=1.0) -> None:
         """
         audio_processor: The AudioProcessor instance that is using this feedback.
         num_voices:      The number of additional voices to add to the output.
