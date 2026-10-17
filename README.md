@@ -15,9 +15,12 @@ To stop, do `ctrl+c` in the running terminal or `ctrl-alt-x` from anywhere.
 Feedbacks are classes that take a microphone input and modify the speaker output. Each feedback produces its own effect.
 
 To introduce a new feedback:
-1. Create the new class: In a new `CustomFeedback.py` (or directly in one of the Feedback files), create a child class `CustomFeedback` of the `Feedback` class from `src/classbacks/Feedback.py`.
-1. Import the class to `main.py`: In `src/callbacks/__init__.py`, import the `CustomFeedback` class and add it to the `__all__` array.
-1. Bind a hotkey to the class: In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback` dict for mapping and activation.
+1. **Create the new class:**
+In a new `CustomFeedback.py` (or directly in one of the Feedback files), create a child class `CustomFeedback` of the `Feedback` class from `src/classbacks/Feedback.py`.
+1. **Import the class to `main.py`:**
+In `src/callbacks/__init__.py`, import the `CustomFeedback` class and add it to the `__all__` array.
+1. **Bind a hotkey to the class:**
+In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback` dict for mapping and activation.
 
 ## Problems and Solutions
 

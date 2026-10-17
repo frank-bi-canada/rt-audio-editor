@@ -6,6 +6,9 @@ class SimpleFeedback(Feedback):
         super().__init__(audio_processor)
 
     def callback(self, indata, outdata, frames, time):
+        """
+        Return the indata as outdata with no modifications.
+        """
         outdata[:] = indata
     
     def __str__(self) -> str:

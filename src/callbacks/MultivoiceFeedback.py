@@ -29,6 +29,9 @@ class MultivoiceFeedback(Feedback):
         self.change_num_voice = True
 
     def callback(self, indata, outdata, frames, time):
+        """
+        Simulate multiple delayed audio sources.
+        """
         outdata[:] = indata
 
         data = indata.squeeze()
