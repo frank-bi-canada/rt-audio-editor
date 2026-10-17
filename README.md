@@ -1,4 +1,4 @@
-# rt-audio-editor
+# Audio Editor Developer Guide
 A program that allows editing a microphone input in real time, like Voicemod.
 
 This project was compiled with `Python 3.14.2`.
@@ -16,10 +16,23 @@ Feedbacks are classes that take a microphone input and modify the speaker output
 
 To introduce a new feedback:
 1. Create the new class: In a new `CustomFeedback.py` (or directly in one of the Feedback files), create a child class `CustomFeedback` of the `Feedback` class from `src/classbacks/Feedback.py`.
-2. Import the class to `main.py`: In `src/callbacks/__init__.py`, import the `CustomFeedback` class and add it to the `__all__` array.
-3. Bind a hotkey to the class: In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback` dict for mapping and activation.
+1. Import the class to `main.py`: In `src/callbacks/__init__.py`, import the `CustomFeedback` class and add it to the `__all__` array.
+1. Bind a hotkey to the class: In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback` dict for mapping and activation.
 
-### Potential Features:
+## Problems and Solutions
+
+The connection between microphone, virtual cable, and speakers may not be fully initialized. If the program is running and audio is not heard in playback, check the one of the following:
+
+- [ ] Check the audio devices are properly configured in `Settings > System > Sound`:
+    * under `Output`, select the main output device (headphones)
+    * under `Input`, select the virtual cable output
+
+- [ ] Ensure the cable output is listened to:
+    1. Use `Window key + R`, search `mmsys.cpl`
+    1. Go to `Recording` tab, select the `CABLE output` and click the `properties` button.
+    1. Go to the `Listen` tab, check the `Listen to this device` box and click `apply`.
+
+# Potential Features:
 - Soundboard
 - Input/output visualization
 - Centralize the audio history from multivoice feedback to the audio processor.
