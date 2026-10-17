@@ -16,6 +16,7 @@ def main():
         'ctrl+alt+0': SimpleFeedback,
         'ctrl+alt+1': RotatingFeedBack,
         'ctrl+alt+2': MultivoiceFeedback,
+        'ctrl+alt+3': FrequencyFeedback,
     }
     
     print("Initializing audio processor...")
