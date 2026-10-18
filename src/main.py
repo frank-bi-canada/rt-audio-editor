@@ -12,12 +12,18 @@ def main():
     INPUT_DEVICE = 23 # Microphone input (Int ID or Str device name) (23 - WASAPI Computer Mic, 3 - MME Computer Mic)
     OUTPUT_DEVICE = 21 # Virtual Cable input (Int ID or Str device name) (21 - WASAPI Headphone Speakers, 20 - WASAPI Input Cable, 5 - MME Headphone Speaker)
 
+    # Voice editing feedbacks
+    # hotkey_to_feedback: dict[str, Feedback] = {
+    #     'ctrl+alt+0': SimpleFeedback,
+    #     'ctrl+alt+1': RotatingFeedBack,
+    #     'ctrl+alt+2': MultivoiceFeedback,
+    # }
+    
+    # Non-editing feedbacks
     hotkey_to_feedback: dict[str, Feedback] = {
-        'ctrl+alt+0': SimpleFeedback,
-        'ctrl+alt+1': RotatingFeedBack,
-        'ctrl+alt+2': MultivoiceFeedback,
-        'ctrl+alt+3': FrequencyFeedback,
+        'ctrl+alt+0': FrequencyFeedback,
     }
+    
     
     print("Initializing audio processor...")
     audio_processor = AudioProcessor(
