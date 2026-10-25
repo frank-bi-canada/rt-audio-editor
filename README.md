@@ -39,4 +39,7 @@ The connection between microphone, virtual cable, and speakers may not be fully 
 - Soundboard
 - Input/output visualization
 - Centralize the audio history from multivoice feedback to the audio processor.
-
+- Different multivoice: Record short audio clip(s) that plays back at the same time, giving the voices different phrases instead of an echo
+    - Positive input: Start/stop recording, which also turns the audio output off/on. Appends new recordings to the list.
+    - Negative input: Reset all recordings. Empties the list of recordings.
+    - Neutral input: Play the recordings in the list.
