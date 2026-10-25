@@ -43,3 +43,4 @@ The connection between microphone, virtual cable, and speakers may not be fully 
     - Positive input: Start/stop recording, which also turns the audio output off/on. Appends new recordings to the list.
     - Negative input: Reset all recordings. Empties the list of recordings.
     - Neutral input: Play the recordings in the list.
+- "Round" audio frequencies to nearest specific frequencies
