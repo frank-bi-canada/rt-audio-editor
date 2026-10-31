@@ -16,7 +16,7 @@ def main():
     # hotkey_to_feedback: dict[str, Feedback] = {
     #     'ctrl+alt+0': SimpleFeedback,
     #     'ctrl+alt+1': RotatingFeedBack,
-    #     'ctrl+alt+2': MultivoiceFeedback,
+    #     'ctrl+alt+2': EchoFeedback,
     # }
     
     # Non-editing feedbacks

@@ -4,7 +4,7 @@ import numpy as np
 from collections import deque
 
 
-class MultivoiceFeedback(Feedback):
+class EchoFeedback(Feedback):
 
     def __init__(self, audio_processor, max_voices=3, max_delay=1.0) -> None:
         """
@@ -79,4 +79,4 @@ class MultivoiceFeedback(Feedback):
         
 
     def __str__(self) -> str:
-        return "multivoice feedback"
+        return "echo feedback"
