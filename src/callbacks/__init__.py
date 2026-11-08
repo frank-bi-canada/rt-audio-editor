@@ -1,7 +1,8 @@
 from .Feedback import Feedback
 from .SimpleFeedback import SimpleFeedback
 from .RotatingFeedback import RotatingFeedBack
-from .MultivoiceFeedback import MultivoiceFeedback
+from .EchoFeedback import EchoFeedback
 from .FrequencyFeedback import FrequencyFeedback
+from .MultivoiceFeedback import MultivoiceFeedback
 
-__all__ = ["Feedback", "SimpleFeedback", "RotatingFeedBack", "MultivoiceFeedback", "FrequencyFeedback"]
+__all__ = ["Feedback", "SimpleFeedback", "RotatingFeedBack", "EchoFeedback", "FrequencyFeedback", "MultivoiceFeedback"]
