@@ -24,13 +24,17 @@ In `main.py`, add a keyboard shortcut and feedback class to `hotkey_to_feedback`
 
 ## Problems and Solutions
 
-The connection between microphone, virtual cable, and speakers may not be fully initialized. If the program is running and audio is not heard in playback, check the one of the following:
+The connection between microphone, virtual cable, and speakers may not be fully initialized. If the program is running and audio is not heard in playbacks, check the one of the following:
 
-- [ ] Check the audio devices are properly configured in `Settings > System > Sound`:
-    * under `Output`, select the main output device (headphones)
+- [ ] [Use for external software] Check the audio devices are properly configured in the playback software's settings:
     * under `Input`, select the virtual cable output
+    * under `Output`, select the main output device (headphones)
 
-- [ ] Ensure the cable output is listened to:
+- [ ] [Use for testing] Check the audio devices are properly configured in `main.py`:
+    * under `Input`, select the microphone as the input device
+    * under `Output`, select the headphones as the output device (bypassing the cable)
+
+- [ ] [Force playback on local machine] Ensure the cable output is listened to:
     1. Use `Window key + R`, search `mmsys.cpl`
     1. Go to `Recording` tab, select the `CABLE output` and click the `properties` button.
     1. Go to the `Listen` tab, check the `Listen to this device` box and click `apply`.
@@ -39,7 +43,4 @@ The connection between microphone, virtual cable, and speakers may not be fully 
 - Soundboard
 - Input/output visualization
 - Centralize the audio history from echo feedback to the audio processor.
-- Multivoice: Record short audio clip(s) that plays back at the same time, giving the voices different phrases instead of an echo
-    - Positive input: Start/stop recording, which also turns the audio output off/on. Appends new recordings to the list.
-    - Negative input: Reset all recordings. Empties the list of recordings.
-    - Neutral input: Play the recordings in the list.
+

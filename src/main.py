@@ -9,8 +9,8 @@ def main():
     # import sounddevice as sd
     # # print(sd.default.device)
     # print(sd.query_devices())
-    INPUT_DEVICE = 23 # Microphone input (Int ID or Str device name) (23 - WASAPI Computer Mic, 3 - MME Computer Mic)
-    OUTPUT_DEVICE = 21 # Virtual Cable input (Int ID or Str device name) (21 - WASAPI Headphone Speakers, 20 - WASAPI Input Cable, 5 - MME Headphone Speaker)
+    INPUT_DEVICE = 23 # Microphone input (Int ID or Str device name) (23 - WASAPI Computer Mic, 22 - Headphones mic, 3 - MME Computer Mic)
+    OUTPUT_DEVICE = 21 # 21 - Virtual Cable input, 19 - Headphones
 
     # Voice editing feedbacks
     hotkey_to_feedback: dict[str, Feedback] = {

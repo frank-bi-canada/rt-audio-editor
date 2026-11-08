@@ -11,7 +11,7 @@ class State(Enum):
 
 class MultivoiceFeedback(Feedback):
 
-    def __init__(self, audio_processor, max_clip_length=5.0) -> None:
+    def __init__(self, audio_processor, max_clip_length=10.0) -> None:
         """
         audio_processor: The AudioProcessor instance that is using this feedback.
         max_clip_length: The maximum length (in seconds) of a recorded clip.
@@ -19,9 +19,8 @@ class MultivoiceFeedback(Feedback):
         super().__init__(audio_processor)
         self.state = State.IDLE
         
-        self.BLOCK_SIZE = self.audio_processor.BLOCK_SIZE
         self.MAX_CLIP_SIZE = int(self.audio_processor.SAMPLE_RATE * max_clip_length) # DELAY = SAMPLE_RATE means a 1 second clips
-        self.MAX_CLIP_SIZE = self.MAX_CLIP_SIZE + (-self.MAX_CLIP_SIZE % self.BLOCK_SIZE) # Round up to the nearest block size multiple
+        self.MAX_CLIP_SIZE = self.MAX_CLIP_SIZE + (-self.MAX_CLIP_SIZE % self.audio_processor.BLOCK_SIZE) # Round up to the nearest block size multiple
         self.recording_clip = None # Currently recorded clip
         self.all_clips = None # Sum of all the clips recorded
         self.longest_clip_frames = 0 # Number of frames in the longest recorded clip
@@ -39,6 +38,7 @@ class MultivoiceFeedback(Feedback):
                 outdata[:] = indata
             case State.PLAYING:
                 # Play all the saved audio clips at the same time
+                self.print_secs(self.curr_frame_i)
                 next_i = self.curr_frame_i + frames
                 outdata[:] = indata + self.all_clips[self.curr_frame_i:next_i]
                 self.curr_frame_i = next_i
@@ -50,6 +50,7 @@ class MultivoiceFeedback(Feedback):
                     
             case State.RECORDING:
                 # Save the audio, output no sound
+                self.print_secs(self.curr_frame_i)
                 next_i = self.curr_frame_i + frames
                 self.recording_clip[self.curr_frame_i:next_i] += indata
                 self.curr_frame_i = next_i
@@ -79,8 +80,8 @@ class MultivoiceFeedback(Feedback):
                     self.all_clips += self.recording_clip
                 
                 self.longest_clip_frames = max(self.longest_clip_frames, self.curr_frame_i)
-                self.recording_clip = None
                 self.set_idle()
+                self.recording_clip = None
                 print(f"Recording stopped.")
             case _:
                 print(f"Cannot record. Current state: '{self.state.name}'.")
@@ -126,6 +127,13 @@ class MultivoiceFeedback(Feedback):
     def set_idle(self):
         self.curr_frame_i = 0
         self.state = State.IDLE
+        
+    def print_secs(self, curr_i):
+        if curr_i % self.audio_processor.SAMPLE_RATE <= self.audio_processor.BLOCK_SIZE:
+            sec = int(curr_i / self.audio_processor.SAMPLE_RATE)
+            prev_sec = int((curr_i - self.audio_processor.BLOCK_SIZE) / self.audio_processor.SAMPLE_RATE)
+            if sec != prev_sec:
+                print(f"{sec}...")
 
     def __str__(self) -> str:
         return "multivoice feedback"
